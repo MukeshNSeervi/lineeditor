@@ -35,22 +35,45 @@ public class CommandHandler
         return null;
         
     }
-    public void Run()
+    public void ProcessInputCommand(string? currentComman)
     {
+        currentArgs = currentComman?.Split(' ').ToList();
+        if(currentArgs != null && Enum.TryParse(currentArgs[0],out Command cmd))
+        {
+            ICommand? command = CommandStratergy.GetAction(cmd);
+            command?.Execute();
+        }
+        else
+        {
+            Console.WriteLine("Invalid command");
+        }
+    }
+    public void ProcessCommands(string[] commands)
+    {
+        int i=0;
+        while(i < commands.Length)
+        {
+            string currentComman = commands[i];
+            if(currentComman.Equals("quit",StringComparison.OrdinalIgnoreCase))
+            {
+                break;
+            }
+            ProcessInputCommand(currentComman);
+            i++;
+        }
+    }
+    public void RunEditor(string[] initialCommands)
+    {
+        if(initialCommands.Length > 0)
+        {
+            ProcessCommands(initialCommands);
+            return;
+        }
         while(true)
         {
             Console.Write(">> ");
             string? input = Console.ReadLine();
-            currentArgs = input?.Split(' ').ToList();
-            if(currentArgs != null && Enum.TryParse(currentArgs[0],out Command cmd))
-            {
-                ICommand? command = CommandStratergy.GetAction(cmd);
-                command?.Execute();
-            }
-            else
-            {
-                Console.WriteLine("Invalid command");
-            }
+            ProcessInputCommand(input);
         }
     }
 }

@@ -15,7 +15,7 @@ public class LineEditor
         FileService fileService = FileService.GetInstance();
         if(fileService.Initalize(fileName))
         {
-            new CommandHandler().Run();
+            new CommandHandler().RunEditor(args[1..]);
         }
     }
 }
